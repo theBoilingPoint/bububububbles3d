@@ -77,7 +77,7 @@ namespace UnityChan
 			}
 		
 			if (Input.GetButtonDown("Jump")) {	
-				if (currentBaseState.nameHash == locoState) {
+				if (currentBaseState.fullPathHash == locoState) {
 					if (!anim.IsInTransition (0)) {
 						rb.AddForce (Vector3.up * jumpPower, ForceMode.VelocityChange);
 						anim.SetBool ("Jump", true);		
@@ -88,7 +88,7 @@ namespace UnityChan
 			transform.localPosition += velocity * Time.fixedDeltaTime;
 			transform.Rotate (0, h * rotateSpeed, 0);	
 			
-			if (currentBaseState.nameHash == locoState)
+			if (currentBaseState.fullPathHash == locoState)
 			{
 
 				if (useCurves)
@@ -96,9 +96,8 @@ namespace UnityChan
 					resetCollider();
 				}
 			}
-			else if (currentBaseState.nameHash == jumpState)
+			else if (currentBaseState.fullPathHash == jumpState)
 			{
-				cameraObject.SendMessage("setCameraPositionJumpView");
 				if (!anim.IsInTransition(0))
 				{
 					if (useCurves)
@@ -131,7 +130,7 @@ namespace UnityChan
 					anim.SetBool("Jump", false);
 				}
 			}
-			else if (currentBaseState.nameHash == idleState)
+			else if (currentBaseState.fullPathHash == idleState)
 			{
 				if (useCurves)
 				{
@@ -142,7 +141,7 @@ namespace UnityChan
 					anim.SetBool("Rest", true);
 				}
 			}
-			else if (currentBaseState.nameHash == restState)
+			else if (currentBaseState.fullPathHash == restState)
 			{
 				if (!anim.IsInTransition(0))
 				{

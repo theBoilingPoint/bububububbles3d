@@ -25,7 +25,7 @@ public class Timer : MonoBehaviour
         Instance = this;
         time = defaultTime;
         
-        DontDestroyOnLoad(gameObject); // keep between scenes if needed
+        DontDestroyOnLoad(gameObject); 
     }
     
     void Update()
@@ -40,28 +40,9 @@ public class Timer : MonoBehaviour
         int seconds = Mathf.FloorToInt(time % 60f);
 
         text.text = string.Format("{0:00}:{1:00}", minutes, seconds);
-
-
-        if (time > 0.0f)
-        {
-            if (ProgressBarFill.Instance.isFilled())
-            {
-                ResetLevel(defaultTime);
-                SceneManager.LoadScene("WinScene");
-            }
-        }
-        else
-        {
-            ResetLevel(defaultTime);
-            SceneManager.LoadScene("LoseScene");
-        }
     }
 
-    private void ResetLevel(float startTime)
-    {
-        time = startTime;
-        ProgressBarFill.Instance.ResetFill();
-    }
-
+    public float GetTime() => time;
     public void AddTime(float amount) => time += amount;
+    public void ResetTime() => time = defaultTime;
 }

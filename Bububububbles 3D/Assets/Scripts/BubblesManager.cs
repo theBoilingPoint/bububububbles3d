@@ -270,7 +270,7 @@ public class BubblesManager : MonoBehaviour
             else
             {
                 spawnedBubbles++;
-                Debug.LogWarning($"[{nameof(BubblesManager)}] Failed to place '{prefab.name}' after {maxPlacementAttempts} attempts.");
+                // Debug.LogWarning($"[{nameof(BubblesManager)}] Failed to place '{prefab.name}' after {maxPlacementAttempts} attempts.");
             }
         }
         

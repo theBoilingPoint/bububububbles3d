@@ -40,37 +40,37 @@ namespace UnityChan
 		// Update is called once per frame
 		void  Update ()
 		{
-			// ↑キー/スペースが押されたら、ステートを次に送る処理
-			if (Input.GetKeyDown ("up") || Input.GetButton ("Jump")) {
-				// ブーリアンNextをtrueにする
-				anim.SetBool ("Next", true);
-			}
-		
-			// ↓キーが押されたら、ステートを前に戻す処理
-			if (Input.GetKeyDown ("down")) {
-				// ブーリアンBackをtrueにする
-				anim.SetBool ("Back", true);
-			}
-		
-			// "Next"フラグがtrueの時の処理
-			if (anim.GetBool ("Next")) {
-				// 現在のステートをチェックし、ステート名が違っていたらブーリアンをfalseに戻す
-				currentState = anim.GetCurrentAnimatorStateInfo (0);
-				if (previousState.nameHash != currentState.nameHash) {
-					anim.SetBool ("Next", false);
-					previousState = currentState;				
-				}
-			}
-		
-			// "Back"フラグがtrueの時の処理
-			if (anim.GetBool ("Back")) {
-				// 現在のステートをチェックし、ステート名が違っていたらブーリアンをfalseに戻す
-				currentState = anim.GetCurrentAnimatorStateInfo (0);
-				if (previousState.nameHash != currentState.nameHash) {
-					anim.SetBool ("Back", false);
-					previousState = currentState;
-				}
-			}
+			// // ↑キー/スペースが押されたら、ステートを次に送る処理
+			// if (Input.GetKeyDown ("up") || Input.GetButton ("Jump")) {
+			// 	// ブーリアンNextをtrueにする
+			// 	anim.SetBool ("Next", true);
+			// }
+			//
+			// // ↓キーが押されたら、ステートを前に戻す処理
+			// if (Input.GetKeyDown ("down")) {
+			// 	// ブーリアンBackをtrueにする
+			// 	anim.SetBool ("Back", true);
+			// }
+			//
+			// // "Next"フラグがtrueの時の処理
+			// if (anim.GetBool ("Next")) {
+			// 	// 現在のステートをチェックし、ステート名が違っていたらブーリアンをfalseに戻す
+			// 	currentState = anim.GetCurrentAnimatorStateInfo (0);
+			// 	if (previousState.nameHash != currentState.nameHash) {
+			// 		anim.SetBool ("Next", false);
+			// 		previousState = currentState;				
+			// 	}
+			// }
+			//
+			// // "Back"フラグがtrueの時の処理
+			// if (anim.GetBool ("Back")) {
+			// 	// 現在のステートをチェックし、ステート名が違っていたらブーリアンをfalseに戻す
+			// 	currentState = anim.GetCurrentAnimatorStateInfo (0);
+			// 	if (previousState.nameHash != currentState.nameHash) {
+			// 		anim.SetBool ("Back", false);
+			// 		previousState = currentState;
+			// 	}
+			// }
 		}
 
 		void OnGUI ()
