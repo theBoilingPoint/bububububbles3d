@@ -14,8 +14,11 @@ public class SkillsManager : MonoBehaviour
     public static SkillsManager Instance { get; private set; }
 
     [SerializeField] private GameObject skillsMenu;
+    [SerializeField] private SkillSlot[] skills;
+    [SerializeField] private SkillScriptable[] skillScriptables;
     
     private Dictionary<Skills, int> skillsStackMap = new Dictionary<Skills, int>();
+    private Dictionary<Skills, SkillScriptable> skillsScriptableMap = new Dictionary<Skills, SkillScriptable>();
     
     private void Awake()
     {
@@ -28,10 +31,57 @@ public class SkillsManager : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
+
+        InitializeSkillsScriptableMap();
+    }
+
+    private void InitializeSkillsScriptableMap()
+    {
+        for (int i = 0; i < skillScriptables.Length; i++)
+        {
+            string skillname = skillScriptables[i].name;
+            switch (skillname)
+            {
+                case "Automation":
+                    skillsScriptableMap[Skills.Automation] = skillScriptables[i];
+                    break;
+                case "Echo":
+                    skillsScriptableMap[Skills.Echo] = skillScriptables[i];
+                    break;
+                case "TimeMaster":
+                    skillsScriptableMap[Skills.TimeMaster] = skillScriptables[i];
+                    break;
+                default:
+                    Debug.LogError("The skill " +  skillname + " doesn't have a in code representation. Did you forget to add it to Skills struct?");
+                    return;
+            }
+        }
+    }
+    
+    public void AddSkillToSlot(Skills s)
+    {
+        if (!skillsScriptableMap.ContainsKey(s))
+        {
+            Debug.LogError(skillsScriptableMap[s].name + " is not in the list of skills");
+            return;
+        }
+
+        SkillScriptable newSkill = skillsScriptableMap[s];
+        for (int i = 0; i < skills.Length; i++)
+        {
+            SkillSlot slot = skills[i];
+            SkillScriptable skill = slot.GetComponentInChildren<SkillScriptable>();
+            if (skill == null)
+            {
+                slot.InitializeSkill(newSkill);
+                return;
+            }
+        }
     }
     
     public void ActivateAutomation()
     {
+        AddSkillToSlot(Skills.Automation);
         UpdateSkillsStackMap(Skills.Automation);
         Time.timeScale = 1f;
         skillsMenu.SetActive(false);
@@ -39,6 +89,7 @@ public class SkillsManager : MonoBehaviour
 
     public void ActivateEcho()
     {
+        AddSkillToSlot(Skills.Echo);
         UpdateSkillsStackMap(Skills.Echo);
         Time.timeScale = 1f;
         skillsMenu.SetActive(false);
@@ -46,6 +97,7 @@ public class SkillsManager : MonoBehaviour
 
     public void ActivateTimeMaster()
     {
+        AddSkillToSlot(Skills.TimeMaster);
         UpdateSkillsStackMap(Skills.TimeMaster);
         Time.timeScale = 1f;
         skillsMenu.SetActive(false);
