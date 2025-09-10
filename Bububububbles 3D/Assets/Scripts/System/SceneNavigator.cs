@@ -15,6 +15,14 @@ public class SceneNavigator : MonoBehaviour
     public void GoToScene(string sceneName)
     {
         Time.timeScale = 1f;
+
+        if (sceneName == "GameplayScene")
+        {
+            if (Timer.Instance != null) Timer.Instance.ResetTime();
+            if (LevelsManager.Instance != null) LevelsManager.Instance.ResetLevels(0);
+            if (ProgressBarFill.Instance != null) ProgressBarFill.Instance.ResetFill();
+        }
+
         SceneManager.LoadScene(sceneName);
     }
     
@@ -27,15 +35,18 @@ public class SceneNavigator : MonoBehaviour
 #endif
     }
 
-    private void ResetLevel()
+    private void ResetGameplay()
     {
-        if (Timer.Instance.IsUnityNull() || ProgressBarFill.Instance.IsUnityNull())
+        if (Timer.Instance.IsUnityNull() || 
+            ProgressBarFill.Instance.IsUnityNull() ||
+            LevelsManager.Instance.IsUnityNull())
         {
-            return;
+            throw new System.Exception("Cannot reset level.");
         }
         
         Timer.Instance.ResetTime();
         ProgressBarFill.Instance.ResetFill();
+        LevelsManager.Instance.ResetLevels(0);
     }
     
     private void ManageInGameSceneTransition()
@@ -47,15 +58,15 @@ public class SceneNavigator : MonoBehaviour
         
         if (Timer.Instance.GetTime() > 0.0f)
         {
-            if (ProgressBarFill.Instance.isFilled())
+            if (LevelsManager.Instance.ReachedTargetLevel())
             {
-                ResetLevel();
+                ResetGameplay();
                 SceneManager.LoadScene("WinScene");
             }
         }
         else
         {
-            ResetLevel();
+            ResetGameplay();
             SceneManager.LoadScene("LoseScene");
         }
     }

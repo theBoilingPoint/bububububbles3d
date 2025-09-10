@@ -33,10 +33,6 @@ public class BubblesManager : MonoBehaviour
     private uint randomSeed = 12345;
     private int maxPlacementAttempts = 10;
     
-    // private int currentNumberOfNormalBubbles = -1;
-    // private int currentNumberOfDangerBubbles = -1;
-    // private int currentNumberOfAddTimeBubbles = -1;
-    
     void Awake()
     {
         numberOfDangerBubbles = Mathf.RoundToInt(totalNumberOfBubbles * dangerBubblePercentage);
@@ -48,17 +44,6 @@ public class BubblesManager : MonoBehaviour
     {
         ClearAllBubbles();
         SpawnAllBubbles(numberOfNormalBubbles, numberOfDangerBubbles, numberOfAddTimeBubbles);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        // RecalculateCounts();
-        // int normalBubbles = numberOfNormalBubbles - currentNumberOfNormalBubbles;
-        // int dangerBubbles = numberOfDangerBubbles - currentNumberOfDangerBubbles;
-        // int addTimeBubbles = numberOfAddTimeBubbles - currentNumberOfAddTimeBubbles;
-        //
-        // SpawnAllBubbles(normalBubbles, dangerBubbles, addTimeBubbles);
     }
 
     public void RemoveBubble(GameObject bubble)
@@ -83,17 +68,6 @@ public class BubblesManager : MonoBehaviour
 
         bubbles.Remove(bubble);
     }
-    
-    // --- Recompute counts from current percentages/total ---
-    // public void RecalculateCounts()
-    // {
-    //     currentNumberOfDangerBubbles = Mathf.RoundToInt(totalNumberOfBubbles * dangerBubblePercentage);
-    //     currentNumberOfAddTimeBubbles = Mathf.Min(
-    //         Mathf.RoundToInt(totalNumberOfBubbles * addTimeBubblePercentage),
-    //         totalNumberOfBubbles - numberOfDangerBubbles
-    //     );
-    //     currentNumberOfNormalBubbles = Mathf.Max(0, totalNumberOfBubbles - numberOfDangerBubbles - numberOfAddTimeBubbles);
-    // }
     
     // Try to sample a point around the player with higher density near rMin (no-spawn radius).
     private bool TrySampleSpawnPointBiased(Vector2 xzSize, System.Random rng, out Vector3 result)
