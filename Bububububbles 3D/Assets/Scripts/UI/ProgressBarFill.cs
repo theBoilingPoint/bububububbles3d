@@ -24,7 +24,6 @@ public class ProgressBarFill : MonoBehaviour
             return;
         }
         Instance = this;
-        DontDestroyOnLoad(gameObject);
     }
 
     private void Update()
@@ -35,11 +34,6 @@ public class ProgressBarFill : MonoBehaviour
     public void UpdateCurrentScore(float score)
     {
         current += score;
-    }
-
-    public bool isFilled()
-    {
-        return progressBarFill.fillAmount >= 1f;
     }
 
     public void ResetFill()

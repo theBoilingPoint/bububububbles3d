@@ -12,11 +12,22 @@ public class SkillSlot : MonoBehaviour
     void Awake()
     {
         image = GetComponent<Image>();
+        gameObject.SetActive(false);
     }
     
     public void InitializeSkill(SkillScriptable newSkill)
     {
         skillScriptable = newSkill;
         image.sprite = newSkill.image;
+    }
+
+    public SkillScriptable GetSkillScriptable()
+    {
+        return skillScriptable;
+    }
+
+    public void SetSkillScriptable(SkillScriptable newSkill)
+    {
+        skillScriptable = newSkill;
     }
 }

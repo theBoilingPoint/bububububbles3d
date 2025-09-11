@@ -1,5 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Mime;
+using UnityEditor;
 using UnityEngine;
 
 public enum Skills
@@ -30,7 +33,6 @@ public class SkillsManager : MonoBehaviour
             return;
         }
         Instance = this;
-        DontDestroyOnLoad(gameObject);
 
         InitializeSkillsScriptableMap();
     }
@@ -70,10 +72,11 @@ public class SkillsManager : MonoBehaviour
         for (int i = 0; i < skills.Length; i++)
         {
             SkillSlot slot = skills[i];
-            SkillScriptable skill = slot.GetComponentInChildren<SkillScriptable>();
+            SkillScriptable skill = slot.GetSkillScriptable();
             if (skill == null)
             {
                 slot.InitializeSkill(newSkill);
+                slot.gameObject.SetActive(true);
                 return;
             }
         }
@@ -101,6 +104,18 @@ public class SkillsManager : MonoBehaviour
         UpdateSkillsStackMap(Skills.TimeMaster);
         Time.timeScale = 1f;
         skillsMenu.SetActive(false);
+    }
+
+    public void ResetSkillSlots()
+    {
+        for (int i = 0; i < skills.Length; i++)
+        {
+            SkillSlot slot = skills[i];
+            slot.SetSkillScriptable(null);
+            slot.gameObject.SetActive(false);
+        }
+        
+        skillsStackMap.Clear();
     }
 
     private void UpdateSkillsStackMap(Skills skill)

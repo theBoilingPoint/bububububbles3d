@@ -7,20 +7,88 @@ using UnityEngine.SceneManagement;
 
 public class SceneNavigator : MonoBehaviour
 {
-    private void Update()
+    public static SceneNavigator Instance { get; private set; }
+    
+    private bool subscribed = false;
+    
+    private void Awake()
     {
-        ManageInGameSceneTransition();
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+    }
+    
+    private void OnEnable()
+    {
+        TrySubscribeOrQueue();
+    }
+
+    private void OnDisable()
+    {
+        TryUnsubscribe();
+    }
+
+    private void TrySubscribeOrQueue()
+    {
+        // If ProgressBarFill is alive, (re)subscribe now
+        if (!subscribed &&
+            !LevelsManager.Instance.IsUnityNull() &&
+            !Timer.Instance.IsUnityNull())
+        {
+            LevelsManager.Instance.OnTargetLevelReached += HandleWin;
+            Timer.Instance.onTimeOut += HandleLose;
+            subscribed = true;
+            return;
+        }
+        // Otherwise, wait one frame and try again (handles init order across scenes)
+        if (!subscribed) StartCoroutine(SubscribeWhenReady());
+    }
+
+    private IEnumerator SubscribeWhenReady()
+    {
+        while (LevelsManager.Instance.IsUnityNull() ||
+               Timer.Instance.IsUnityNull())
+        {
+            yield return null;
+        }
+
+        if (!subscribed && 
+            !LevelsManager.Instance.IsUnityNull()
+            && !Timer.Instance.IsUnityNull())
+        {
+            LevelsManager.Instance.OnTargetLevelReached += HandleWin;
+            Timer.Instance.onTimeOut += HandleLose;
+            subscribed = true;
+        }
+    }
+
+    private void TryUnsubscribe()
+    {
+        if (subscribed)
+        {
+            if (!LevelsManager.Instance.IsUnityNull()) LevelsManager.Instance.OnTargetLevelReached -= HandleWin;
+            
+        }
+        subscribed = false;
     }
 
     public void GoToScene(string sceneName)
     {
         Time.timeScale = 1f;
-
+ 
         if (sceneName == "GameplayScene")
         {
-            if (Timer.Instance != null) Timer.Instance.ResetTime();
-            if (LevelsManager.Instance != null) LevelsManager.Instance.ResetLevels(0);
-            if (ProgressBarFill.Instance != null) ProgressBarFill.Instance.ResetFill();
+            if (!Timer.Instance.IsUnityNull()) Timer.Instance.ResetTime();
+            if (!LevelsManager.Instance.IsUnityNull()) LevelsManager.Instance.ResetLevels(0);
+            if (!ProgressBarFill.Instance.IsUnityNull()) ProgressBarFill.Instance.ResetFill();
+        }
+        else
+        {
+            if (!SkillsManager.Instance.IsUnityNull()) SkillsManager.Instance.ResetSkillSlots();
+            if (!DynamicMenu.Instance.IsUnityNull()) DynamicMenu.Instance.ResetDynamicMenu();
         }
 
         SceneManager.LoadScene(sceneName);
@@ -35,39 +103,23 @@ public class SceneNavigator : MonoBehaviour
 #endif
     }
 
-    private void ResetGameplay()
-    {
-        if (Timer.Instance.IsUnityNull() || 
-            ProgressBarFill.Instance.IsUnityNull() ||
-            LevelsManager.Instance.IsUnityNull())
-        {
-            throw new System.Exception("Cannot reset level.");
-        }
-        
-        Timer.Instance.ResetTime();
-        ProgressBarFill.Instance.ResetFill();
-        LevelsManager.Instance.ResetLevels(0);
-    }
-    
-    private void ManageInGameSceneTransition()
+    private void HandleWin()
     {
         if (SceneManager.GetActiveScene().name != "GameplayScene")
         {
             return;
         }
         
-        if (Timer.Instance.GetTime() > 0.0f)
+        GoToScene("WinScene");
+    }
+
+    private void HandleLose()
+    {
+        if (SceneManager.GetActiveScene().name != "GameplayScene")
         {
-            if (LevelsManager.Instance.ReachedTargetLevel())
-            {
-                ResetGameplay();
-                SceneManager.LoadScene("WinScene");
-            }
+            return;
         }
-        else
-        {
-            ResetGameplay();
-            SceneManager.LoadScene("LoseScene");
-        }
+        
+        GoToScene("LoseScene");
     }
 }

@@ -10,7 +10,7 @@ public class LevelsManager : MonoBehaviour
     public static LevelsManager Instance { get; private set; }
 
     [Header("Prefabs")]
-    [SerializeField] private GameObject skillsMenu;
+    [SerializeField] private GameObject dynamicCanvas;
     [SerializeField] private TextMeshProUGUI text;
 
     [Header("Levels Setting")]
@@ -18,12 +18,14 @@ public class LevelsManager : MonoBehaviour
     [SerializeField] private int currentLevel = 0;
 
     private bool subscribed = false;
+    
+    public event Action OnLevelIncremented;
+    public event Action OnTargetLevelReached;
 
     private void Awake()
     {
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
         Instance = this;
-        DontDestroyOnLoad(gameObject);
     }
 
     private void OnEnable()
@@ -49,7 +51,7 @@ public class LevelsManager : MonoBehaviour
         if (!subscribed) StartCoroutine(SubscribeWhenReady());
     }
 
-    private System.Collections.IEnumerator SubscribeWhenReady()
+    private IEnumerator SubscribeWhenReady()
     {
         while (ProgressBarFill.Instance.IsUnityNull())
         {
@@ -86,9 +88,13 @@ public class LevelsManager : MonoBehaviour
         if (currentLevel < targetLevel)
         {
             currentLevel += 1;
-            Time.timeScale = 0f;
-            skillsMenu.SetActive(true);
-            ProgressBarFill.Instance.ResetFill();
+            OnLevelIncremented?.Invoke();
+            if (!Timer.Instance.IsUnityNull()) Timer.Instance.ResetTime();
+            if (!ProgressBarFill.Instance.IsUnityNull()) ProgressBarFill.Instance.ResetFill();
+        }
+        else if (currentLevel == targetLevel)
+        {
+            OnTargetLevelReached?.Invoke();
         }
     }
 
@@ -97,9 +103,5 @@ public class LevelsManager : MonoBehaviour
     public void ResetLevels(int startAt = 0)
     {
         currentLevel = Mathf.Clamp(startAt, 0, targetLevel);
-        if (!ProgressBarFill.Instance.IsUnityNull())
-        {
-            ProgressBarFill.Instance.ResetFill();
-        }
     }
 }

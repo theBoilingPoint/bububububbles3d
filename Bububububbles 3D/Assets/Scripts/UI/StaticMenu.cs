@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameplayMenu : MonoBehaviour
+public class StaticMenu : MonoBehaviour
 {
-    public static GameplayMenu Instance { get; private set; }
+    public static StaticMenu Instance { get; private set; }
     
     private void Awake()
     {
@@ -14,6 +14,5 @@ public class GameplayMenu : MonoBehaviour
             return;
         }
         Instance = this;
-        DontDestroyOnLoad(gameObject);
     }
 }
