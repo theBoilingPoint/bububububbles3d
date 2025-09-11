@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f660d03dbd0fa444287a9955dafffda0, type: 3}
   m_Name: Echo
   m_EditorClassIdentifier: 
-  tile: {fileID: 0}
-  skillType: 0
+  type: 0
   image: {fileID: 21300000, guid: 19fffaba64e814a38b7a126eb63f9731, type: 3}
+  skillName: Echo
+  activationDescription: 'Destroy 3 extra normal bubbles around the selected one. '
+  stackingDescription: Stacking increases the number of destoryed bubbles by 1.

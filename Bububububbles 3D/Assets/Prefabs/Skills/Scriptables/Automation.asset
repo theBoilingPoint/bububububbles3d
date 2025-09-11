@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f660d03dbd0fa444287a9955dafffda0, type: 3}
   m_Name: Automation
   m_EditorClassIdentifier: 
-  tile: {fileID: 0}
-  skillType: 1
+  type: 1
   image: {fileID: 21300000, guid: d542234a073714b7aba1c165cd24494e, type: 3}
+  skillName: Automation
+  activationDescription: 'Destroy 1 normal bubble automatically per second. '
+  stackingDescription: Stacking increases the number of automatically destoryed bubbles
+    by 1.

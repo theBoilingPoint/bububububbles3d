@@ -76,14 +76,14 @@ namespace UnityChan
 				velocity *= backwardSpeed;	
 			}
 		
-			if (Input.GetButtonDown("Jump")) {	
-				if (currentBaseState.fullPathHash == locoState) {
-					if (!anim.IsInTransition (0)) {
-						rb.AddForce (Vector3.up * jumpPower, ForceMode.VelocityChange);
-						anim.SetBool ("Jump", true);		
-					}
-				}
-			}
+			// if (Input.GetButtonDown("Jump")) {	
+			// 	if (currentBaseState.fullPathHash == locoState) {
+			// 		if (!anim.IsInTransition (0)) {
+			// 			rb.AddForce (Vector3.up * jumpPower, ForceMode.VelocityChange);
+			// 			anim.SetBool ("Jump", true);		
+			// 		}
+			// 	}
+			// }
 
 			transform.localPosition += velocity * Time.fixedDeltaTime;
 			transform.Rotate (0, h * rotateSpeed, 0);	

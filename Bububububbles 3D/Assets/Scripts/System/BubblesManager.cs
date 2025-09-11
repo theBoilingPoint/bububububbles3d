@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class BubblesManager : MonoBehaviour
 {
+    public static BubblesManager Instance { get; private set; }
+    
     [Header("Prefabs")]
     [SerializeField] private GameObject player;
     [SerializeField] private GameObject floor;
@@ -35,6 +37,13 @@ public class BubblesManager : MonoBehaviour
     
     void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        
         numberOfDangerBubbles = Mathf.RoundToInt(totalNumberOfBubbles * dangerBubblePercentage);
         numberOfAddTimeBubbles = Mathf.Min(Mathf.RoundToInt(totalNumberOfBubbles * addTimeBubblePercentage), totalNumberOfBubbles - numberOfDangerBubbles);
         numberOfNormalBubbles = Mathf.Max(0, totalNumberOfBubbles - numberOfDangerBubbles - numberOfAddTimeBubbles);

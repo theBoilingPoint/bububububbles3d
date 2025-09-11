@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -87,6 +88,7 @@ public class DynamicMenu : MonoBehaviour
   private void HandleLevelIncremented()
   {
     Time.timeScale = 0f;
+    skillsMenu.GetComponent<SkillsSelectionMenu>().InitializeSkillsSelectionMenu();
     skillsMenu.SetActive(true);
   }
 

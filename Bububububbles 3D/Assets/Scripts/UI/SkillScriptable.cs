@@ -1,21 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
-
-public enum SkillType
-{
-    Active,
-    Passive
-}
 
 [CreateAssetMenu(menuName = "ScriptableObjects/Skill")]
 public class SkillScriptable : ScriptableObject
 {
+    public enum Type
+    {
+        Active,
+        Passive
+    }
+    
     [Header("Gameplay")]
-    public TileBase tile;
-    public SkillType skillType;
+    public Type type;
     
     [Header("UI")]
     public Sprite image;
+    public string skillName;
+    public string activationDescription;
+    public string stackingDescription;
 }
