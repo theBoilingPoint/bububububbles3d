@@ -1,21 +1,28 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using System;
 
 public class Timer : MonoBehaviour
 {
     public static Timer Instance { get; private set; }
-
-    [SerializeField] private float defaultTime = 60f;
-    [SerializeField] private TextMeshProUGUI text;
     
+    [Header("Prefabs")]
+    [SerializeField] private TextMeshProUGUI text;
+    [SerializeField] private TextMeshProUGUI timerFreezeCountdownText;
+
+    [Header("Params")]
+    [SerializeField] private float defaultTime = 60f;
+    [SerializeField] private Color timerColor = Color.white;
+    [SerializeField] private Color timerFreezeColor = Color.blue;
+
+    private bool isFrozen = false;
     private float time;
     private bool signaledTimeOut = false;
 
-    public event Action onTimeOut; 
+    private Coroutine freezeRoutine;   // track running freeze coroutine
+
+    public event Action onTimeOut;
 
     private void Awake()
     {
@@ -24,36 +31,97 @@ public class Timer : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-        
+
         Instance = this;
         time = defaultTime;
-    }
-    
-    void Update()
-    {
-        if (time > 0f)
+        if (text != null) text.color = timerColor;
+        if (timerFreezeCountdownText != null)
         {
-            time -= Time.deltaTime;
-            if (time < 0f) time = 0f;
+            timerFreezeCountdownText.color = timerFreezeColor;
+            timerFreezeCountdownText.gameObject.SetActive(false);
         }
-        else
+    }
+
+    private void Update()
+    {
+        if (!isFrozen)
         {
-            if (!signaledTimeOut)
+            if (time > 0f)
             {
-                onTimeOut?.Invoke();
-                signaledTimeOut = true;
+                time -= Time.deltaTime;
+                if (time < 0f) time = 0f;
+            }
+            else
+            {
+                if (!signaledTimeOut)
+                {
+                    onTimeOut?.Invoke();
+                    signaledTimeOut = true;
+                }
             }
         }
 
         int minutes = Mathf.FloorToInt(time / 60f);
         int seconds = Mathf.FloorToInt(time % 60f);
-
-        text.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+        if (text != null)
+            text.text = string.Format("{0:00}:{1:00}", minutes, seconds);
     }
 
     public void AddTime(float amount) => time += amount;
-    public void ResetTime() {
+
+    public void ResetTime()
+    {
         time = defaultTime;
         signaledTimeOut = false;
+    }
+    
+    public void FreezeTimer(float seconds)
+    {
+        if (!gameObject.activeInHierarchy) return;
+
+        // If a freeze routine is already running, stop it and reset color
+        if (freezeRoutine != null)
+        {
+            StopCoroutine(freezeRoutine);
+            freezeRoutine = null;
+            if (text != null) text.color = timerColor;
+        }
+
+        freezeRoutine = StartCoroutine(FreezeRoutine(seconds));
+    }
+
+    private IEnumerator FreezeRoutine(float seconds)
+    {
+        isFrozen = true;
+        if (text != null) text.color = timerFreezeColor;
+
+        float remaining = seconds;
+        if (timerFreezeCountdownText != null)
+        {
+            timerFreezeCountdownText.gameObject.SetActive(true);
+        }
+
+        while (remaining > 0f)
+        {
+            // update countdown display
+            if (timerFreezeCountdownText != null)
+            {
+                timerFreezeCountdownText.text = Mathf.CeilToInt(remaining).ToString();
+            }
+
+            // wait one frame and subtract deltaTime
+            yield return null;
+            remaining -= Time.deltaTime;
+        }
+
+        // clean up when freeze ends
+        isFrozen = false;
+        if (text != null) text.color = timerColor;
+        if (timerFreezeCountdownText != null)
+        {
+            timerFreezeCountdownText.gameObject.SetActive(false);
+        }
+
+        freezeRoutine = null;
     }
 }

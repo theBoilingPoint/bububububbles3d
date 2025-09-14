@@ -6,33 +6,29 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public enum Skills
+public enum Skill
 {
     Automation,
     Echo,
     TimeMaster
 }
 
-public class SkillsManager : MonoBehaviour
+public class SkillsBinder : MonoBehaviour
 {
-    public static SkillsManager Instance { get; private set; }
+    public static SkillsBinder Instance { get; private set; }
     
     [Header("Prefabs")]
     [SerializeField] private GameObject skillsMenu;
     [SerializeField] private SkillSlot[] skillSlots;
     [SerializeField] private SkillScriptable[] skillScriptables;
     
-    private Dictionary<Skills, int> skillsStackMap = new Dictionary<Skills, int>();
-    private Dictionary<Skills, SkillScriptable> skillsScriptableMap = new Dictionary<Skills, SkillScriptable>();
+    public Dictionary<Skill, int> skillsStackMap = new Dictionary<Skill, int>();
+    private Dictionary<Skill, SkillScriptable> skillsScriptableMap = new Dictionary<Skill, SkillScriptable>();
     // note that the size of validKeyBindings should be at least that of SkillSlot
     private Queue<Key> validKeyBindings = new Queue<Key>();
     
     private void Awake()
     {
-        validKeyBindings.Enqueue(Key.U);
-        validKeyBindings.Enqueue(Key.I);
-        validKeyBindings.Enqueue(Key.O);
-        
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -41,36 +37,44 @@ public class SkillsManager : MonoBehaviour
         Instance = this;
 
         InitializeSkillsScriptableMap();
+        InitializeValidKeyBindings();
     }
 
     private void InitializeSkillsScriptableMap()
     {
         for (int i = 0; i < skillScriptables.Length; i++)
         {
-            string skillname = skillScriptables[i].skillName;
-            switch (skillname)
+            Skill skill = skillScriptables[i].skill;
+            switch (skill)
             {
-                case "Automation":
-                    skillsScriptableMap[Skills.Automation] = skillScriptables[i];
+                case Skill.Automation:
+                    skillsScriptableMap[Skill.Automation] = skillScriptables[i];
                     break;
-                case "Echo":
-                    skillsScriptableMap[Skills.Echo] = skillScriptables[i];
+                case Skill.Echo:
+                    skillsScriptableMap[Skill.Echo] = skillScriptables[i];
                     break;
-                case "Time Master":
-                    skillsScriptableMap[Skills.TimeMaster] = skillScriptables[i];
+                case Skill.TimeMaster:
+                    skillsScriptableMap[Skill.TimeMaster] = skillScriptables[i];
                     break;
                 default:
-                    Debug.LogError("The skill " +  skillname + " doesn't have a in code representation. Did you forget to add it to Skills struct?");
+                    Debug.LogError("The skill " +  skill + " doesn't have a in code representation. Did you forget to add it to Skills struct?");
                     return;
             }
         }
     }
+
+    private void InitializeValidKeyBindings()
+    {
+        validKeyBindings.Enqueue(Key.U);
+        validKeyBindings.Enqueue(Key.I);
+        validKeyBindings.Enqueue(Key.O);
+    }
     
-    public void AddSkillToSlot(Skills s)
+    public void AddSkillToSlot(Skill s)
     {
         if (!skillsScriptableMap.ContainsKey(s))
         {
-            Debug.LogError(skillsScriptableMap[s].skillName + " is not in the list of skills");
+            Debug.LogError(skillsScriptableMap[s].skill + " is not in the list of skills");
             return;
         }
         
@@ -83,7 +87,7 @@ public class SkillsManager : MonoBehaviour
             SkillScriptable skill = slot.GetSkillScriptable();
             if (alreadyAdded)
             {
-                if (skill.skillName == skillsScriptableMap[s].skillName)
+                if (skill.skill == skillsScriptableMap[s].skill)
                 {
                     slot.StackSkill(skillsStackMap[s]);
                     return;
@@ -112,8 +116,8 @@ public class SkillsManager : MonoBehaviour
     
     public void BindAutomation()
     {
-        UpdateSkillsStackMap(Skills.Automation);
-        AddSkillToSlot(Skills.Automation);
+        UpdateSkillsStackMap(Skill.Automation);
+        AddSkillToSlot(Skill.Automation);
         Time.timeScale = 1f;
         skillsMenu.GetComponent<SkillsSelectionMenu>().ResetSkillsSelectionMenu();
         skillsMenu.SetActive(false);
@@ -121,8 +125,8 @@ public class SkillsManager : MonoBehaviour
 
     public void BindEcho()
     {
-        UpdateSkillsStackMap(Skills.Echo);
-        AddSkillToSlot(Skills.Echo);
+        UpdateSkillsStackMap(Skill.Echo);
+        AddSkillToSlot(Skill.Echo);
         Time.timeScale = 1f;
         skillsMenu.GetComponent<SkillsSelectionMenu>().ResetSkillsSelectionMenu();
         skillsMenu.SetActive(false);
@@ -130,8 +134,8 @@ public class SkillsManager : MonoBehaviour
 
     public void BindTimeMaster()
     {
-        UpdateSkillsStackMap(Skills.TimeMaster);
-        AddSkillToSlot(Skills.TimeMaster);
+        UpdateSkillsStackMap(Skill.TimeMaster);
+        AddSkillToSlot(Skill.TimeMaster);
         Time.timeScale = 1f;
         skillsMenu.GetComponent<SkillsSelectionMenu>().ResetSkillsSelectionMenu();
         skillsMenu.SetActive(false);
@@ -149,21 +153,21 @@ public class SkillsManager : MonoBehaviour
         skillsStackMap.Clear();
     }
 
-    private bool isActiveSkill(Skills s)
+    private bool isActiveSkill(Skill s)
     {
         switch (s)
         {
-            case Skills.Automation:
+            case Skill.Automation:
                 return false;
-            case Skills.Echo:
-            case Skills.TimeMaster:
+            case Skill.Echo:
+            case Skill.TimeMaster:
                 return true;
             default:
                 return false;
         }
     }
 
-    private void UpdateSkillsStackMap(Skills skill)
+    private void UpdateSkillsStackMap(Skill skill)
     {
         if (skillsStackMap.ContainsKey(skill))
         {

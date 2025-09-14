@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 0
   image: {fileID: 21300000, guid: 19fffaba64e814a38b7a126eb63f9731, type: 3}
-  skillName: Echo
-  activationDescription: 'Destroy 3 extra normal bubbles around the selected one. '
+  skill: 1
+  activationDescription: 'Destroy 3 extra normal bubbles together with the next collided
+    bubble. '
   stackingDescription: Stacking increases the number of destoryed bubbles by 1.

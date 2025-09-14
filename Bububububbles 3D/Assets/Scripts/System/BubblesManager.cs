@@ -2,6 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum Bubble
+{
+    NormalBubble,
+    DangerBubble,
+    AddTimeBubble
+}
+
 public class BubblesManager : MonoBehaviour
 {
     public static BubblesManager Instance { get; private set; }
@@ -27,7 +34,9 @@ public class BubblesManager : MonoBehaviour
     [SerializeField] private float minSeparation = 1.0f;  // avoid overlap between bubbles
     [SerializeField] private LayerMask floorMask = ~0;    // which layers count as "floor" for raycast
     [SerializeField] private LayerMask bubbleObstacles = 0; // layers to avoid when checking separation
-
+    
+    public Dictionary<Bubble, int> bubbleScoreMap = new Dictionary<Bubble, int>();
+    
     private int numberOfNormalBubbles = -1;
     private int numberOfDangerBubbles = -1;
     private int numberOfAddTimeBubbles = -1;
@@ -47,6 +56,15 @@ public class BubblesManager : MonoBehaviour
         numberOfDangerBubbles = Mathf.RoundToInt(totalNumberOfBubbles * dangerBubblePercentage);
         numberOfAddTimeBubbles = Mathf.Min(Mathf.RoundToInt(totalNumberOfBubbles * addTimeBubblePercentage), totalNumberOfBubbles - numberOfDangerBubbles);
         numberOfNormalBubbles = Mathf.Max(0, totalNumberOfBubbles - numberOfDangerBubbles - numberOfAddTimeBubbles);
+
+        InitializeBubbleScores();
+    }
+
+    private void InitializeBubbleScores()
+    {
+        bubbleScoreMap.Add(Bubble.NormalBubble, 10);
+        bubbleScoreMap.Add(Bubble.DangerBubble, -5);
+        bubbleScoreMap.Add(Bubble.AddTimeBubble, 5);
     }
 
     void Start()
@@ -60,17 +78,17 @@ public class BubblesManager : MonoBehaviour
         Vector2 xzSize = GetWorldXZSize();
         System.Random rng = new System.Random((int)randomSeed);
         
-        if (bubble.CompareTag("NormalBubble"))
+        if (bubble.CompareTag(Bubble.NormalBubble.ToString()))
         {
             SpawnBubblesNearPlayer(normalBubble, 1, xzSize, rng, out int remainingNormalBubbles);
         }
 
-        if (bubble.CompareTag("DangerBubble"))
+        if (bubble.CompareTag(Bubble.DangerBubble.ToString()))
         {
             SpawnBubblesNearPlayer(dangerBubble, 1, xzSize, rng, out int remainingDangerBubbles);
         }
 
-        if (bubble.CompareTag("AddTimeBubble"))
+        if (bubble.CompareTag(Bubble.AddTimeBubble.ToString()))
         {
             SpawnBubblesNearPlayer(addTimeBubble, 1, xzSize, rng, out int remainingAddTimeBubbles);
         }

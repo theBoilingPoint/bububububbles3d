@@ -17,15 +17,15 @@ public class SkillSlot : MonoBehaviour
     [Header("Params")]
     [SerializeField] private float fillStep = 0.25f;   // how much to add each tick
     [SerializeField] private float stepInterval = 1f;  // seconds per tick
-    
-    private string skillName;
+
     private Image image;
     private int count = 0;
     private Key keyBinding = Key.None;
     
-    private Coroutine fillRoutine;
+    private Coroutine executionRoutine;
     private bool isPressed = false;
     private bool isRefreshing = false;
+    private bool isExecuted = false;
 
     void Awake()
     {
@@ -37,17 +37,18 @@ public class SkillSlot : MonoBehaviour
     {
         if (Keyboard.current != null && keyBinding != Key.None)
         {
-            if (Keyboard.current[keyBinding].wasPressedThisFrame && !isRefreshing && !isPressed)
+            if (Keyboard.current[keyBinding].wasPressedThisFrame && !isRefreshing && !isPressed && !isExecuted)
             {
-                fillRoutine = StartCoroutine(FillMaskRoutine());
+                executionRoutine = StartCoroutine(ExecuteSkillRoutine());
             }
         }
     }
     
-    private IEnumerator FillMaskRoutine()
+    private IEnumerator ExecuteSkillRoutine()
     {
         isRefreshing = true;
         isPressed = true;
+        isExecuted = SkillsExecutor.Instance.ExecuteSkill(skillScriptable.skill);
 
         refreshMask.gameObject.SetActive(true);
         refreshMask.fillAmount = 1f; 
@@ -62,12 +63,12 @@ public class SkillSlot : MonoBehaviour
 
         isPressed = false;
         isRefreshing = false;
-        fillRoutine = null;
+        isExecuted = false;
+        executionRoutine = null;
     }
     
     public void InitializeSkill(SkillScriptable newSkill, Key binding = Key.None)
     {
-        skillName = newSkill.skillName;
         skillScriptable = newSkill;
         image.sprite = newSkill.image;
         refreshMask.gameObject.SetActive(false);
@@ -80,6 +81,8 @@ public class SkillSlot : MonoBehaviour
         }
         else
         {
+            // If there's no key binding, the current skill is passive
+            SkillsExecutor.Instance.ExecuteSkill(skillScriptable.skill);
             keyBindingText.gameObject.SetActive(false);
         }
     }

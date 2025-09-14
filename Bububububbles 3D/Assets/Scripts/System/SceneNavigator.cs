@@ -87,7 +87,7 @@ public class SceneNavigator : MonoBehaviour
         }
         else
         {
-            if (!SkillsManager.Instance.IsUnityNull()) SkillsManager.Instance.ResetSkillSlots();
+            if (!SkillsBinder.Instance.IsUnityNull()) SkillsBinder.Instance.ResetSkillSlots();
             if (!DynamicMenu.Instance.IsUnityNull()) DynamicMenu.Instance.ResetDynamicMenu();
         }
 

@@ -18,7 +18,7 @@ public class SkillScriptable : ScriptableObject
     
     [Header("UI")]
     public Sprite image;
-    public string skillName;
+    public Skill skill;
     public string activationDescription;
     public string stackingDescription;
 }

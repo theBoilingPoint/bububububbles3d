@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -35,7 +36,11 @@ public class SkillsSelectionMenu : MonoBehaviour
             SkillScriptable skill = skillsScriptables[i];
             
             Transform title = button.transform.Find("Title");
-            if (title != null) title.GetComponent<TextMeshProUGUI>().text = skill.skillName;
+            if (title != null)
+            {
+                string skillName = skill.skill.ToString();
+                title.GetComponent<TextMeshProUGUI>().text = Regex.Replace(skillName, "(?<!^)([A-Z])", " $1");
+            }
             Transform type = button.transform.Find("Type");
             if (type != null) type.GetComponent<TextMeshProUGUI>().text = skill.type.ToString();
             Transform icon = button.transform.Find("Icon");
@@ -45,19 +50,19 @@ public class SkillsSelectionMenu : MonoBehaviour
             Transform stackingDescription = button.transform.Find("StackingDescription");
             if (stackingDescription != null) stackingDescription.GetComponent<TextMeshProUGUI>().text = skill.stackingDescription;
 
-            switch (skill.skillName)
+            switch (skill.skill)
             {
-                case "Automation":
-                    button.onClick.AddListener(SkillsManager.Instance.BindAutomation);
+                case Skill.Automation:
+                    button.onClick.AddListener(SkillsBinder.Instance.BindAutomation);
                     break;
-                case "Echo":
-                    button.onClick.AddListener(SkillsManager.Instance.BindEcho);
+                case Skill.Echo:
+                    button.onClick.AddListener(SkillsBinder.Instance.BindEcho);
                     break;
-                case "Time Master":
-                    button.onClick.AddListener(SkillsManager.Instance.BindTimeMaster);
+                case Skill.TimeMaster:
+                    button.onClick.AddListener(SkillsBinder.Instance.BindTimeMaster);
                     break;
                 default:
-                    Debug.LogError("You haven't implemented the function for skill: " + skill.skillName);
+                    Debug.LogError("You haven't implemented the function for skill: " + skill.skill);
                     break;
             }
         }

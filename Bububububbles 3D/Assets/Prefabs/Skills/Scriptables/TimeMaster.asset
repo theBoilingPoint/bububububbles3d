@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 0
   image: {fileID: 21300000, guid: 71b58161cdbee472b8f6891128592a4f, type: 3}
-  skillName: Time Master
-  activationDescription: Pause the timer for 2 seconds.
-  stackingDescription: Stacking increases the amount of time paused by 1s. This skill
-    can only stack up to 3 times.
+  skill: 2
+  activationDescription: Freeze the timer for 2 seconds.
+  stackingDescription: Stacking increases the amount of time freeze by 1s.
