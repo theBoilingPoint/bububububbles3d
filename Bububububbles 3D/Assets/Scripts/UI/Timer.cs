@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Timer : MonoBehaviour
@@ -73,20 +74,14 @@ public class Timer : MonoBehaviour
     {
         time = defaultTime;
         signaledTimeOut = false;
+        ResetTimeFreeze();
     }
     
     public void FreezeTimer(float seconds)
     {
         if (!gameObject.activeInHierarchy) return;
 
-        // If a freeze routine is already running, stop it and reset color
-        if (freezeRoutine != null)
-        {
-            StopCoroutine(freezeRoutine);
-            freezeRoutine = null;
-            if (text != null) text.color = timerColor;
-        }
-
+        ResetTimeFreeze();
         freezeRoutine = StartCoroutine(FreezeRoutine(seconds));
     }
 
@@ -123,5 +118,19 @@ public class Timer : MonoBehaviour
         }
 
         freezeRoutine = null;
+    }
+
+    private void ResetTimeFreeze()
+    {
+        // If a freeze routine is already running, stop it and reset color
+        if (freezeRoutine != null)
+        {
+            StopCoroutine(freezeRoutine);
+            freezeRoutine = null;
+            if (!text.IsUnityNull()) text.color = timerColor;
+        }
+
+        timerFreezeCountdownText.text = 0.ToString();
+        timerFreezeCountdownText.gameObject.SetActive(false);
     }
 }

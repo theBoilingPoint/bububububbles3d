@@ -13,7 +13,7 @@ public class SkillsExecutor : MonoBehaviour
     [Header("Params")]
     [SerializeField] private float automationInterval = 1f; // how frequently to execute automation in s
 
-    [SerializeField] private float timeMasterDuration = 3f; // The duration of the time master effect
+    [SerializeField] private float timeMasterDuration = 2f; // The duration of the time master effect
     
     public static SkillsExecutor Instance { get; private set; }
     
@@ -140,7 +140,7 @@ public class SkillsExecutor : MonoBehaviour
     {
         if (Timer.Instance.IsUnityNull() || SkillsBinder.Instance.IsUnityNull()) return false;
 
-        float amount = 2f + SkillsBinder.Instance.skillsStackMap[Skill.TimeMaster];
+        float amount = timeMasterDuration + SkillsBinder.Instance.skillsStackMap[Skill.TimeMaster];
         Timer.Instance.FreezeTimer(amount);
         return true;
     }

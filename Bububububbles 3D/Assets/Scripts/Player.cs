@@ -9,7 +9,7 @@ public class Player : MonoBehaviour
     
     public static Player Instance { get; private set; }
     
-    public bool hasCollidedWithBubbles = false;
+    [HideInInspector] public bool hasCollidedWithBubbles = false;
     
     private void Awake()
     {

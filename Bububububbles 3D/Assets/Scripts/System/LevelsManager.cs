@@ -12,6 +12,7 @@ public class LevelsManager : MonoBehaviour
     [Header("Prefabs")]
     [SerializeField] private GameObject dynamicCanvas;
     [SerializeField] private TextMeshProUGUI text;
+    [SerializeField] private SkillSlot[] skillSlots;
 
     [Header("Levels Setting")]
     [SerializeField] private int targetLevel = 3;
@@ -89,12 +90,21 @@ public class LevelsManager : MonoBehaviour
         {
             currentLevel += 1;
             OnLevelIncremented?.Invoke();
-            if (!Timer.Instance.IsUnityNull()) Timer.Instance.ResetTime();
-            if (!ProgressBarFill.Instance.IsUnityNull()) ProgressBarFill.Instance.ResetFill();
+            ResetLevel();
         }
         else if (currentLevel == targetLevel)
         {
             OnTargetLevelReached?.Invoke();
+        }
+    }
+
+    private void ResetLevel()
+    {
+        if (!Timer.Instance.IsUnityNull()) Timer.Instance.ResetTime();
+        if (!ProgressBarFill.Instance.IsUnityNull()) ProgressBarFill.Instance.ResetFill();
+        for (int i = 0; i < skillSlots.Length; i++)
+        {
+            skillSlots[i].ResetSlot();
         }
     }
 

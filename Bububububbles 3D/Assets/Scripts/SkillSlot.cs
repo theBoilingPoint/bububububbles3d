@@ -39,12 +39,12 @@ public class SkillSlot : MonoBehaviour
         {
             if (Keyboard.current[keyBinding].wasPressedThisFrame && !isRefreshing && !isPressed && !isExecuted)
             {
-                executionRoutine = StartCoroutine(ExecuteSkillRoutine());
+                executionRoutine = StartCoroutine(SkillRoutine());
             }
         }
     }
     
-    private IEnumerator ExecuteSkillRoutine()
+    private IEnumerator SkillRoutine()
     {
         isRefreshing = true;
         isPressed = true;
@@ -102,5 +102,16 @@ public class SkillSlot : MonoBehaviour
     public void SetSkillScriptable(SkillScriptable newSkill)
     {
         skillScriptable = newSkill;
+    }
+
+    public void ResetSlot()
+    {
+        if (executionRoutine != null)
+        {
+            StopCoroutine(executionRoutine);
+        }
+        
+        refreshMask.fillAmount = 1f; 
+        refreshMask.gameObject.SetActive(false);
     }
 }
