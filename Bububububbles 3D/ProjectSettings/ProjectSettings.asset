@@ -141,7 +141,7 @@ PlayerSettings:
   loadStoreDebugModeEnabled: 0
   visionOSBundleVersion: 1.0
   tvOSBundleVersion: 1.0
-  bundleVersion: 0.1
+  bundleVersion: Beta
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -162,7 +162,8 @@ PlayerSettings:
   resetResolutionOnWindowResize: 0
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
-  applicationIdentifier: {}
+  applicationIdentifier:
+    Standalone: com.PaulinaTao.Bububububbles-3D
   buildNumber:
     Standalone: 0
     VisionOS: 0
@@ -764,7 +765,7 @@ PlayerSettings:
   hmiLogStartupTiming: 0
   hmiCpuConfiguration: 
   apiCompatibilityLevel: 6
-  activeInputHandler: 2
+  activeInputHandler: 1
   windowsGamepadBackendHint: 0
   cloudProjectId: 4c6a3c6e-0977-49b7-8e7c-a4e8035809ea
   framebufferDepthMemorylessMode: 0

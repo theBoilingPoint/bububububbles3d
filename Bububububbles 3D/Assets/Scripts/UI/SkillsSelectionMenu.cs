@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class SkillsSelectionMenu : MonoBehaviour
 {
@@ -49,23 +48,30 @@ public class SkillsSelectionMenu : MonoBehaviour
             if (activationDescription != null) activationDescription.GetComponent<TextMeshProUGUI>().text = skill.activationDescription;
             Transform stackingDescription = button.transform.Find("StackingDescription");
             if (stackingDescription != null) stackingDescription.GetComponent<TextMeshProUGUI>().text = skill.stackingDescription;
-
+    
+            button.onClick.RemoveAllListeners();
             switch (skill.skill)
             {
                 case Skill.Automation:
-                    button.onClick.AddListener(SkillsBinder.Instance.BindAutomation);
+                    button.onClick.AddListener(() => ChooseSkill(() => SkillsBinder.Instance.BindAutomation()));
                     break;
                 case Skill.Echo:
-                    button.onClick.AddListener(SkillsBinder.Instance.BindEcho);
+                    button.onClick.AddListener(() => ChooseSkill(() => SkillsBinder.Instance.BindEcho()));
                     break;
                 case Skill.TimeMaster:
-                    button.onClick.AddListener(SkillsBinder.Instance.BindTimeMaster);
+                    button.onClick.AddListener(() => ChooseSkill(() => SkillsBinder.Instance.BindTimeMaster()));
                     break;
                 default:
                     Debug.LogError("You haven't implemented the function for skill: " + skill.skill);
                     break;
             }
         }
+    }
+
+    private void ChooseSkill(Action bind)
+    {
+        bind?.Invoke();                    // bind the chosen skill
+        DynamicMenu.Instance.CloseSkillsMenu();  // resume gameplay + switch map
     }
 
     public void ResetSkillsSelectionMenu()

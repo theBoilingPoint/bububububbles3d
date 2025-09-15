@@ -1,6 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -35,6 +33,9 @@ public class SkillSlot : MonoBehaviour
 
     private void Update()
     {
+        if (DynamicMenu.IsAnyMenuOpen)
+            return;
+        
         if (Keyboard.current != null && keyBinding != Key.None)
         {
             if (Keyboard.current[keyBinding].wasPressedThisFrame && !isRefreshing && !isPressed && !isExecuted)
