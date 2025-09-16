@@ -109,7 +109,7 @@ public class SkillsExecutor : MonoBehaviour
 
         int count = SkillsBinder.Instance.skillsStackMap[Skill.Automation];
         if (count <= 0) return false;
-
+        
         var bm = bubblesManager;
         if (bm == null)
         {
@@ -123,11 +123,14 @@ public class SkillsExecutor : MonoBehaviour
     // active skills
     private bool ExecuteEcho()
     {
+        int stack = SkillsBinder.Instance.skillsStackMap[Skill.Echo];
+        if (stack <= 0) return false;
+
         if (player.hasCollidedWithBubbles)
         {
             if (SkillsBinder.Instance.IsUnityNull()) return false;
             
-            int count = 3 + SkillsBinder.Instance.skillsStackMap[Skill.Echo];
+            int count = 3 + stack;
             RemoveNormalBubbles(count);
             skillActivationMap[Skill.Echo] = false;
         }
@@ -137,9 +140,12 @@ public class SkillsExecutor : MonoBehaviour
 
     private bool ExecuteTimeMaster()
     {
+        int stack = SkillsBinder.Instance.skillsStackMap[Skill.TimeMaster];
+        if (stack <= 0) return false;
+        
         if (Timer.Instance.IsUnityNull() || SkillsBinder.Instance.IsUnityNull()) return false;
 
-        float amount = timeMasterDuration + SkillsBinder.Instance.skillsStackMap[Skill.TimeMaster];
+        float amount = timeMasterDuration + stack;
         Timer.Instance.FreezeTimer(amount);
         return true;
     }

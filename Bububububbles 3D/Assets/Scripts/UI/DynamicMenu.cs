@@ -207,6 +207,5 @@ public class DynamicMenu : MonoBehaviour
   {
     if (playerInput == null) return;
     playerInput.SwitchCurrentActionMap(gameplayMap);
-    // `Cancel` state doesn’t matter in Gameplay; it’s not in that map.
   }
 }
