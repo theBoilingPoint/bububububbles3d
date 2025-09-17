@@ -1687,7 +1687,8 @@ MonoBehaviour:
   bubblesManager: {fileID: 645346391}
   player: {fileID: 261344428}
   automationInterval: 1
-  timeMasterDuration: 3
+  echoCount: 3
+  timeMasterDuration: 0
 --- !u!114 &232915376
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2046,7 +2047,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 261344426}
   serializedVersion: 4
-  m_Mass: 10
+  m_Mass: 1000
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -4126,12 +4127,12 @@ MonoBehaviour:
   player: {fileID: 261344426}
   floor: {fileID: 1495247375}
   normalBubble: {fileID: 426691526135951411, guid: 46ea12c270ab27f44be010598ab9efa0, type: 3}
-  dangerBubble: {fileID: 1835855928196532021, guid: 84b226c1788d6f141b114710262d42b8, type: 3}
-  addTimeBubble: {fileID: 707700697464513100, guid: 05ee5c453c12caa47ba5db23ada59327, type: 3}
+  dangerBubble: {fileID: 707700697464513100, guid: 05ee5c453c12caa47ba5db23ada59327, type: 3}
+  addTimeBubble: {fileID: 1835855928196532021, guid: 84b226c1788d6f141b114710262d42b8, type: 3}
   bubblesParent: {fileID: 645346390}
   totalNumberOfBubbles: 100
   dangerBubblePercentage: 0.3
-  addTimeBubblePercentage: 0.2
+  addTimeBubblePercentage: 0.1
   minDistanceFromPlayer: 3
   densityFalloff: 0.25
   surfaceOffsetY: 0.1
@@ -9922,6 +9923,10 @@ PrefabInstance:
       propertyPath: backgroundMusic
       value: 
       objectReference: {fileID: 355920799}
+    - target: {fileID: 8357352892257757202, guid: 30a3d7b9cb6194bddb7a20282da92ba8, type: 3}
+      propertyPath: loopBackgroundMusic
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -11602,6 +11607,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a28f151a17dca417585449cd6754a7f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bubblesManager: {fileID: 645346391}
   dynamicCanvas: {fileID: 699114853}
   text: {fileID: 70399640}
   skillSlots:
@@ -12588,6 +12594,10 @@ PrefabInstance:
       propertyPath: bubblesManagerScript
       value: 
       objectReference: {fileID: 645346391}
+    - target: {fileID: 7802170284473889657, guid: d1f3693d757e32a41954ad6262f750b1, type: 3}
+      propertyPath: m_Mass
+      value: 1000
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}
     m_RemovedGameObjects: []

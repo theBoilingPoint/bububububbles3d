@@ -11,8 +11,8 @@ public class SkillsExecutor : MonoBehaviour
     
     [Header("Params")]
     [SerializeField] private float automationInterval = 1f; // how frequently to execute automation in s
-
-    [SerializeField] private float timeMasterDuration = 2f; // The duration of the time master effect
+    [SerializeField] private int echoCount = 3;
+    [SerializeField] private float timeMasterDuration = 0f; // The duration of the time master effect
     
     public static SkillsExecutor Instance { get; private set; }
     
@@ -130,7 +130,7 @@ public class SkillsExecutor : MonoBehaviour
         {
             if (SkillsBinder.Instance.IsUnityNull()) return false;
             
-            int count = 3 + stack;
+            int count = echoCount + stack;
             RemoveNormalBubbles(count);
             skillActivationMap[Skill.Echo] = false;
         }
@@ -140,10 +140,15 @@ public class SkillsExecutor : MonoBehaviour
 
     private bool ExecuteTimeMaster()
     {
-        int stack = SkillsBinder.Instance.skillsStackMap[Skill.TimeMaster];
-        if (stack <= 0) return false;
-        
         if (Timer.Instance.IsUnityNull() || SkillsBinder.Instance.IsUnityNull()) return false;
+
+        int stack = 0;
+        SkillsBinder.Instance.skillsStackMap.TryGetValue(Skill.TimeMaster, out stack);
+        if (stack <= 0)
+        {
+            Debug.LogWarning("[TimeMaster] No stacks/binding for this level; skill press ignored.");
+            return false; 
+        }
 
         float amount = timeMasterDuration + stack;
         Timer.Instance.FreezeTimer(amount);

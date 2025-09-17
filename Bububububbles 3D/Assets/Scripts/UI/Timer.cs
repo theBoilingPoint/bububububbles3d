@@ -13,7 +13,7 @@ public class Timer : MonoBehaviour
     [SerializeField] private TextMeshProUGUI timerFreezeCountdownText;
 
     [Header("Params")]
-    [SerializeField] private float defaultTime = 60f;
+    [SerializeField] private float defaultTime;
     [SerializeField] private Color timerColor = Color.white;
     [SerializeField] private Color timerFreezeColor = Color.blue;
 
@@ -129,6 +129,8 @@ public class Timer : MonoBehaviour
             freezeRoutine = null;
             if (!text.IsUnityNull()) text.color = timerColor;
         }
+        
+        isFrozen = false;
 
         timerFreezeCountdownText.text = 0.ToString();
         timerFreezeCountdownText.gameObject.SetActive(false);

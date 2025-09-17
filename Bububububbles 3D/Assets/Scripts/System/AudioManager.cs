@@ -29,7 +29,7 @@ public class AudioManager : MonoBehaviour
             backgroundMusic.Play();
         }
 
-        if (startClip != null)
+        if (startClip != "")
         {
             PlayClip(startClip);
         }

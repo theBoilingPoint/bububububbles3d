@@ -27,7 +27,8 @@ public class BubblesManager : MonoBehaviour
     [SerializeField, Range(0f, 1f)]
     private float dangerBubblePercentage = 0.3f;
     [SerializeField, Range(0f, 1f)]
-    private float addTimeBubblePercentage = 0.2f;
+    private float addTimeBubblePercentage = 0.1f;
+    
     [SerializeField] private float minDistanceFromPlayer = 3f; // r: no-spawn radius in meters
     [SerializeField] private float densityFalloff = 0.35f;     // larger = stronger clustering near r_min
     [SerializeField] private float surfaceOffsetY = 0.1f; // how high above the floor to place a bubble
@@ -44,6 +45,8 @@ public class BubblesManager : MonoBehaviour
     private uint randomSeed = 12345;
     private int maxPlacementAttempts = 10;
     
+    private float dangerBubbleSizeScaleFactor = 1f;
+    
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -53,18 +56,8 @@ public class BubblesManager : MonoBehaviour
         }
         Instance = this;
         
-        numberOfDangerBubbles = Mathf.RoundToInt(totalNumberOfBubbles * dangerBubblePercentage);
-        numberOfAddTimeBubbles = Mathf.Min(Mathf.RoundToInt(totalNumberOfBubbles * addTimeBubblePercentage), totalNumberOfBubbles - numberOfDangerBubbles);
-        numberOfNormalBubbles = Mathf.Max(0, totalNumberOfBubbles - numberOfDangerBubbles - numberOfAddTimeBubbles);
-
+        UpdateBubbleNumbers();
         InitializeBubbleScores();
-    }
-
-    private void InitializeBubbleScores()
-    {
-        bubbleScoreMap.Add(Bubble.NormalBubble, 10);
-        bubbleScoreMap.Add(Bubble.DangerBubble, -5);
-        bubbleScoreMap.Add(Bubble.AddTimeBubble, 5);
     }
 
     void Start()
@@ -85,15 +78,50 @@ public class BubblesManager : MonoBehaviour
 
         if (bubble.CompareTag(Bubble.DangerBubble.ToString()))
         {
-            SpawnBubblesNearPlayer(dangerBubble, 1, xzSize, rng, out int remainingDangerBubbles);
-        }
-
-        if (bubble.CompareTag(Bubble.AddTimeBubble.ToString()))
-        {
-            SpawnBubblesNearPlayer(addTimeBubble, 1, xzSize, rng, out int remainingAddTimeBubbles);
+            SpawnBubblesNearPlayer(dangerBubble, 1, xzSize, rng, out int remainingDangerBubbles, dangerBubbleSizeScaleFactor);
         }
 
         bubbles.Remove(bubble);
+    }
+
+    public void IncreaseDifficulty(int level)
+    {
+        ClearAllBubbles();
+        dangerBubblePercentage = Mathf.Min(0.5f, dangerBubblePercentage + level * 0.1f); // at most 50%
+        addTimeBubblePercentage = Mathf.Max(0.03f, addTimeBubblePercentage + level * -0.03f); // at least 5%
+        dangerBubbleSizeScaleFactor = 1f + 0.5f * level;
+        
+        UpdateBubbleNumbers();
+        SpawnAllBubbles(numberOfNormalBubbles, numberOfDangerBubbles, numberOfAddTimeBubbles, dangerBubbleSizeScaleFactor, level > 1);
+    }
+    
+    private void InitializeBubbleScores()
+    {
+        bubbleScoreMap.Add(Bubble.NormalBubble, 5);
+        bubbleScoreMap.Add(Bubble.DangerBubble, -5);
+        bubbleScoreMap.Add(Bubble.AddTimeBubble, 5);
+    }
+    
+    private GameObject InstantiateScaled(GameObject prefab, Vector3 position, Quaternion rotation, float scaleFactor)
+    {
+        var go = Instantiate(prefab, position, rotation, bubblesParent);
+        go.transform.localScale *= scaleFactor;
+
+        // Scale collider on the clone
+        Collider col = go.GetComponent<Collider>();
+        if (col is SphereCollider sphere)
+            sphere.radius *= scaleFactor;
+        else if (col is BoxCollider box)
+            box.size *= scaleFactor;
+
+        return go;
+    }
+
+    private void UpdateBubbleNumbers()
+    {
+        numberOfDangerBubbles = Mathf.RoundToInt(totalNumberOfBubbles * dangerBubblePercentage);
+        numberOfAddTimeBubbles = Mathf.Min(Mathf.RoundToInt(totalNumberOfBubbles * addTimeBubblePercentage), totalNumberOfBubbles - numberOfDangerBubbles);
+        numberOfNormalBubbles = Mathf.Max(0, totalNumberOfBubbles - numberOfDangerBubbles - numberOfAddTimeBubbles);
     }
     
     // Try to sample a point around the player with higher density near rMin (no-spawn radius).
@@ -161,8 +189,9 @@ public class BubblesManager : MonoBehaviour
         }
         return false;
     }
-    
-    private void SpawnBubblesGrid(GameObject prefab, int count, Vector2 xzSize, System.Random rng)
+
+    private void SpawnBubblesGrid(GameObject prefab, int count, Vector2 xzSize, System.Random rng,
+        float scaleFactor = 1.0f, bool movable = false)
     {
         if (prefab == null || count <= 0) return;
 
@@ -216,7 +245,10 @@ public class BubblesManager : MonoBehaviour
                         continue;
                 }
 
-                var go = Instantiate(prefab, candidate, Quaternion.identity, bubblesParent);
+                var go = prefab.CompareTag(Bubble.DangerBubble.ToString()) ? 
+                    InstantiateScaled(prefab, candidate, Quaternion.identity, scaleFactor) : 
+                    Instantiate(prefab, candidate, Quaternion.identity);
+                go.GetComponent<BubbleMovement>().movable = movable;
                 bubbles.Add(go);
                 placed++;
             }
@@ -226,17 +258,17 @@ public class BubblesManager : MonoBehaviour
             Debug.LogWarning($"[BubblesManager] Grid placed {placed}/{count}. Reduce minSeparation or count, or enlarge floor.");
     }
 
-    public void SpawnAllBubbles(int normalBubbles, int dangerBubbles, int addTimeBubbles)
+    public void SpawnAllBubbles(int normalBubbles, int dangerBubbles, int addTimeBubbles, float scaleFactor = 1.0f, bool movable = false)
     {
         Vector2 xzSize = GetWorldXZSize();
         System.Random rng = new System.Random((int)randomSeed);
 
-        SpawnBubblesNearPlayer(normalBubble, normalBubbles, xzSize, rng, out int remainingNormalBubbles);
-        SpawnBubblesNearPlayer(dangerBubble, dangerBubbles, xzSize, rng, out int  remainingDangerBubbles);
-        SpawnBubblesNearPlayer(addTimeBubble, addTimeBubbles, xzSize, rng, out int remainingAddTimeBubbles);
-        SpawnBubblesGrid(normalBubble, remainingNormalBubbles, xzSize, rng);
-        SpawnBubblesGrid(dangerBubble, remainingDangerBubbles, xzSize, rng);
-        SpawnBubblesGrid(addTimeBubble, remainingAddTimeBubbles, xzSize, rng);
+        SpawnBubblesNearPlayer(normalBubble, normalBubbles, xzSize, rng, out int remainingNormalBubbles, scaleFactor, movable);
+        SpawnBubblesNearPlayer(dangerBubble, dangerBubbles, xzSize, rng, out int  remainingDangerBubbles, scaleFactor, movable);
+        SpawnBubblesNearPlayer(addTimeBubble, addTimeBubbles, xzSize, rng, out int remainingAddTimeBubbles, scaleFactor, movable);
+        SpawnBubblesGrid(normalBubble, remainingNormalBubbles, xzSize, rng, scaleFactor, movable);
+        SpawnBubblesGrid(dangerBubble, remainingDangerBubbles, xzSize, rng, scaleFactor, movable);
+        SpawnBubblesGrid(addTimeBubble, remainingAddTimeBubbles, xzSize, rng, scaleFactor, movable);
     }
 
     // --- Remove any previously spawned bubble instances tracked in 'bubbles' ---
@@ -252,7 +284,7 @@ public class BubblesManager : MonoBehaviour
         bubbles.Clear();
     }
 
-    private void SpawnBubblesNearPlayer(GameObject prefab, int count, Vector2 xzSize, System.Random rng, out int remainingBubblesCount)
+    private void SpawnBubblesNearPlayer(GameObject prefab, int count, Vector2 xzSize, System.Random rng, out int remainingBubblesCount, float scaleFactor = 1.0f, bool movable = false)
     {
         if (prefab == null || count <= 0)
         {
@@ -265,7 +297,10 @@ public class BubblesManager : MonoBehaviour
         {
             if (TrySampleSpawnPointBiased(xzSize, rng, out Vector3 pos))
             {
-                var go = Instantiate(prefab, pos, Quaternion.identity, bubblesParent);
+                var go = prefab.CompareTag(Bubble.DangerBubble.ToString()) ? 
+                    InstantiateScaled(prefab, pos, Quaternion.identity, scaleFactor) : 
+                    Instantiate(prefab, pos, Quaternion.identity);
+                go.GetComponent<BubbleMovement>().movable =  movable;
                 bubbles.Add(go);
             }
             else

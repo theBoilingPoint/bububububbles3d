@@ -110,9 +110,17 @@ public class SkillSlot : MonoBehaviour
         if (executionRoutine != null)
         {
             StopCoroutine(executionRoutine);
+            executionRoutine = null;
         }
-        
-        refreshMask.fillAmount = 1f; 
-        refreshMask.gameObject.SetActive(false);
+
+        isRefreshing = false;
+        isPressed = false;
+        isExecuted = false;
+
+        if (refreshMask != null)
+        {
+            refreshMask.fillAmount = 0f;   
+            refreshMask.gameObject.SetActive(false);
+        }
     }
 }

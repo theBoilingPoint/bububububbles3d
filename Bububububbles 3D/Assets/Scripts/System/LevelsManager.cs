@@ -8,7 +8,8 @@ public class LevelsManager : MonoBehaviour
 {
     public static LevelsManager Instance { get; private set; }
 
-    [Header("Prefabs")]
+    [Header("Prefabs")] 
+    [SerializeField] private BubblesManager bubblesManager;
     [SerializeField] private GameObject dynamicCanvas;
     [SerializeField] private TextMeshProUGUI text;
     [SerializeField] private SkillSlot[] skillSlots;
@@ -90,6 +91,7 @@ public class LevelsManager : MonoBehaviour
             currentLevel += 1;
             OnLevelIncremented?.Invoke();
             ResetLevel();
+            bubblesManager.IncreaseDifficulty(currentLevel);
         }
         else if (currentLevel == targetLevel)
         {
@@ -106,8 +108,6 @@ public class LevelsManager : MonoBehaviour
             skillSlots[i].ResetSlot();
         }
     }
-
-    public bool ReachedTargetLevel() => currentLevel == targetLevel;
 
     public void ResetLevels(int startAt = 0)
     {

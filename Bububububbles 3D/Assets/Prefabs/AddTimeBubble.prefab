@@ -94,8 +94,9 @@ GameObject:
   - component: {fileID: 129086640038996507}
   - component: {fileID: 2941818941196590417}
   - component: {fileID: 1208799951731330531}
+  - component: {fileID: -6564057910939071325}
   m_Layer: 3
-  m_Name: increaseTimeBall
+  m_Name: AddTimeBubble
   m_TagString: AddTimeBubble
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -110,8 +111,8 @@ Transform:
   m_GameObject: {fileID: 1835855928196532021}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.3455, y: -0.21286, z: -2.0863}
-  m_LocalScale: {x: 0.70537, y: 0.70537, z: 0.70537}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7145459114206867485}
@@ -169,6 +170,28 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &-6564057910939071325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1835855928196532021}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9410f111f6cf7914f9ec6b24b42cc63e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movable: 0
+  floorMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  groundCheckHeight: 0.6
+  pauseBetweenMoves: 1.2
+  moveDuration: 1.5
+  moveAcceleration: 4
+  maxHorizontalSpeed: 3
+  hardStopBetweenBursts: 1
 --- !u!1 &6944017853534809222
 GameObject:
   m_ObjectHideFlags: 0

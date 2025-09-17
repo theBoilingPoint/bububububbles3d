@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 2516157312761042204}
   - component: {fileID: 7823853543179952808}
   - component: {fileID: 3061948788228765007}
+  - component: {fileID: 9048111396557653258}
   m_Layer: 3
-  m_Name: decreaseTimeBall
+  m_Name: DangerBubble
   m_TagString: DangerBubble
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -27,8 +28,8 @@ Transform:
   m_GameObject: {fileID: 707700697464513100}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.79072, y: -0.21286, z: -2.405}
-  m_LocalScale: {x: 0.64055, y: 0.64055, z: 0.64055}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 884910460679039254}
@@ -86,6 +87,28 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &9048111396557653258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 707700697464513100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9410f111f6cf7914f9ec6b24b42cc63e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movable: 0
+  floorMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  groundCheckHeight: 0.6
+  pauseBetweenMoves: 1.2
+  moveDuration: 1.5
+  moveAcceleration: 4
+  maxHorizontalSpeed: 3
+  hardStopBetweenBursts: 1
 --- !u!1 &2009261382267456630
 GameObject:
   m_ObjectHideFlags: 0
