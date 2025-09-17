@@ -368,6 +368,67 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac8e3d1419ee66947947d64b0aedce0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1001 &486958986
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 745620639964538807, guid: 30a3d7b9cb6194bddb7a20282da92ba8, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1920.0024
+      objectReference: {fileID: 0}
+    - target: {fileID: 745620639964538807, guid: 30a3d7b9cb6194bddb7a20282da92ba8, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1080
+      objectReference: {fileID: 0}
+    - target: {fileID: 745620639964538807, guid: 30a3d7b9cb6194bddb7a20282da92ba8, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 745620639964538807, guid: 30a3d7b9cb6194bddb7a20282da92ba8, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 745620639964538807, guid: 30a3d7b9cb6194bddb7a20282da92ba8, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 745620639964538807, guid: 30a3d7b9cb6194bddb7a20282da92ba8, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 745620639964538807, guid: 30a3d7b9cb6194bddb7a20282da92ba8, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 745620639964538807, guid: 30a3d7b9cb6194bddb7a20282da92ba8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 745620639964538807, guid: 30a3d7b9cb6194bddb7a20282da92ba8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 745620639964538807, guid: 30a3d7b9cb6194bddb7a20282da92ba8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6216199402398472280, guid: 30a3d7b9cb6194bddb7a20282da92ba8, type: 3}
+      propertyPath: m_Name
+      value: AudioManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 8357352892257757202, guid: 30a3d7b9cb6194bddb7a20282da92ba8, type: 3}
+      propertyPath: startClip
+      value: UnityChanLose
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 30a3d7b9cb6194bddb7a20282da92ba8, type: 3}
 --- !u!1 &633820992
 GameObject:
   m_ObjectHideFlags: 0
@@ -665,16 +726,24 @@ PrefabInstance:
     m_TransformParent: {fileID: 81983804}
     m_Modifications:
     - target: {fileID: 3930990135205619867, guid: 4c58a799ac2db4b46ae49fc9766d8b13, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3930990135205619867, guid: 4c58a799ac2db4b46ae49fc9766d8b13, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 253068627}
     - target: {fileID: 3930990135205619867, guid: 4c58a799ac2db4b46ae49fc9766d8b13, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: QuitGame
+      value: QuitAfterSfx
       objectReference: {fileID: 0}
     - target: {fileID: 3930990135205619867, guid: 4c58a799ac2db4b46ae49fc9766d8b13, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: SceneNavigator, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 3930990135205619867, guid: 4c58a799ac2db4b46ae49fc9766d8b13, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
+      value: UnityChanPlayAgainBye
       objectReference: {fileID: 0}
     - target: {fileID: 5419738817710332085, guid: 4c58a799ac2db4b46ae49fc9766d8b13, type: 3}
       propertyPath: m_Pivot.x
@@ -1102,15 +1171,15 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 253068627}
-        m_TargetAssemblyTypeName: SceneManager, Assembly-CSharp
-        m_MethodName: GoToScene
+        m_TargetAssemblyTypeName: SceneNavigator, Assembly-CSharp
+        m_MethodName: GoToGameplayAfterSfx
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: GameplayScene
+          m_StringArgument: UnityChanPlayAgain
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &2132922078
@@ -1155,6 +1224,7 @@ CanvasRenderer:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 486958986}
   - {fileID: 633820995}
   - {fileID: 1080852512}
   - {fileID: 253068626}

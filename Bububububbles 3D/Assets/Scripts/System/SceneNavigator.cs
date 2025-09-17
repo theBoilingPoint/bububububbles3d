@@ -8,6 +8,7 @@ public class SceneNavigator : MonoBehaviour
     public static SceneNavigator Instance { get; private set; }
     
     private bool subscribed = false;
+    private bool _busy = false;
     
     private void Awake()
     {
@@ -90,6 +91,45 @@ public class SceneNavigator : MonoBehaviour
         }
 
         SceneManager.LoadScene(sceneName);
+    }
+    
+    public void GoToGameplayAfterSfx(string sfxName)
+    {
+        if (!_busy) StartCoroutine(Co_GoToSceneAfterSfx(sfxName, "GameplayScene"));
+    }
+    
+    private IEnumerator Co_GoToSceneAfterSfx(string sfxName, string sceneName)
+    {
+        _busy = true;
+
+        // kick the sound and wait
+        if (AudioManager.Instance != null)
+            yield return AudioManager.Instance.PlayClipAndWait(sfxName);
+
+        // then run your existing reset + load logic
+        GoToScene(sceneName);
+
+        _busy = false;
+    }
+
+    public void QuitAfterSfx(string sfxName)
+    {
+        if (!_busy) StartCoroutine(Co_QuitAfterSfx(sfxName));
+    }
+
+    private IEnumerator Co_QuitAfterSfx(string sfxName)
+    {
+        _busy = true;
+
+        if (AudioManager.Instance != null)
+            yield return AudioManager.Instance.PlayClipAndWait(sfxName);
+
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
+        _busy = false;
     }
     
     public void QuitGame()
